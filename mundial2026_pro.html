@@ -1,0 +1,1088 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Mundial 2026 · Probabilidades Reales</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0d0f14;--bg2:#13161e;--bg3:#1a1e28;--card:#1e2330;
+  --b1:#252b3a;--b2:#2f3750;
+  --t1:#edf0f7;--t2:#8c96b0;--t3:#4f5a75;
+  --acc:#2a6fff;--g:#22c45e;--a:#f59d0b;--r:#ef4343;
+  --p:#a855f7;--tl:#14b8a6;--gold:#fbbf24;
+  --rad:8px;--rad2:12px;
+}
+body{background:var(--bg);color:var(--t1);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-size:13px;line-height:1.5;min-height:100vh}
+.layout{display:flex;height:100vh;overflow:hidden}
+.sidebar{width:255px;min-width:255px;background:var(--bg2);border-right:1px solid var(--b1);display:flex;flex-direction:column;overflow:hidden}
+.main{flex:1;overflow-y:auto;background:var(--bg)}
+.hdr{padding:12px 14px;border-bottom:1px solid var(--b1)}
+.hdr-logo{font-size:14px;font-weight:700}
+.hdr-logo em{color:var(--acc);font-style:normal}
+.hdr-sub{font-size:10px;color:var(--t3);margin-top:2px;line-height:1.5}
+.notice{background:#0e1628;border:1px solid #1e3860;border-radius:6px;padding:8px 10px;font-size:9px;color:var(--t2);margin-top:8px;line-height:1.6}
+.notice strong{color:var(--g)}
+.sb-search{padding:9px 11px;border-bottom:1px solid var(--b1)}
+.sb-search input{width:100%;background:var(--bg3);border:1px solid var(--b1);border-radius:var(--rad);padding:6px 9px;color:var(--t1);font-size:12px;outline:none}
+.sb-search input:focus{border-color:var(--acc)}
+.sb-search input::placeholder{color:var(--t3)}
+.sb-list{overflow-y:auto;flex:1}
+.si{display:flex;align-items:center;gap:8px;padding:8px 11px;cursor:pointer;border-bottom:1px solid var(--b1);transition:background .1s}
+.si:hover{background:var(--bg3)}
+.si.on{background:var(--bg3);border-left:2px solid var(--acc)}
+.si-flag{font-size:17px}
+.si-inf{flex:1;min-width:0}
+.si-n{font-size:11px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.si-m{font-size:9px;color:var(--t3)}
+.si-r{font-size:9px;color:var(--t3);background:var(--bg3);border:1px solid var(--b1);border-radius:3px;padding:1px 4px;flex-shrink:0}
+.pg{padding:18px 22px;max-width:960px}
+/* HOME */
+.htitle{font-size:20px;font-weight:700;margin-bottom:3px}
+.hsub{font-size:12px;color:var(--t2);margin-bottom:14px}
+.cfbar{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:12px}
+.cf{padding:4px 11px;border-radius:20px;border:1px solid var(--b1);background:var(--card);color:var(--t2);font-size:10px;cursor:pointer}
+.cf:hover,.cf.on{background:var(--acc);border-color:var(--acc);color:#fff}
+.tgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(115px,1fr));gap:7px}
+.tc{background:var(--card);border:1px solid var(--b1);border-radius:var(--rad);padding:11px;cursor:pointer;text-align:center;transition:border-color .1s,transform .1s}
+.tc:hover{border-color:var(--b2);transform:translateY(-1px)}
+.tc-f{font-size:24px;margin-bottom:4px}
+.tc-n{font-size:10px;font-weight:600}
+.tc-m{font-size:9px;color:var(--t3);margin-top:2px}
+/* TEAM */
+.thdr{background:var(--card);border:1px solid var(--b1);border-radius:var(--rad2);padding:16px 18px;margin-bottom:14px;display:flex;gap:14px;align-items:flex-start}
+.th-f{font-size:44px}
+.th-b{flex:1}
+.th-n{font-size:20px;font-weight:700}
+.th-m{font-size:11px;color:var(--t2);margin-top:2px}
+.frow{display:flex;gap:3px;margin-top:8px;align-items:center;flex-wrap:wrap}
+.fb{padding:2px 6px;border-radius:3px;font-size:10px;font-weight:700}
+.fw{background:#14532c;color:#4ade7f}
+.fd{background:#292524;color:#a8a29d}
+.fl{background:#450a0a;color:#f87070}
+.inj{margin-top:7px;font-size:10px;color:#f87070}
+.swrap{display:flex;flex-wrap:wrap;gap:4px;margin-top:7px}
+.schip{background:var(--bg3);border:1px solid var(--b1);border-radius:3px;padding:2px 7px;font-size:9px;color:var(--t2)}
+/* RIVAL */
+.rgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(95px,1fr));gap:6px;margin-bottom:14px}
+.rc{background:var(--card);border:1px solid var(--b1);border-radius:var(--rad);padding:8px;cursor:pointer;text-align:center;transition:border-color .1s}
+.rc:hover{border-color:var(--b2)}
+.rc.on{border:2px solid var(--acc);background:#182040}
+.rc-f{font-size:18px;margin-bottom:2px}
+.rc-n{font-size:10px;font-weight:500;line-height:1.2}
+.rc-r{font-size:9px;color:var(--t3)}
+/* MATCH */
+.mbar{background:var(--card);border:1px solid var(--b1);border-radius:var(--rad2);padding:14px 18px;margin-bottom:14px;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.mb-t{text-align:center;min-width:80px}
+.mb-fl{font-size:30px}
+.mb-tn{font-size:12px;font-weight:600;margin-top:2px}
+.mb-rk{font-size:9px;color:var(--t3)}
+.mb-vs{font-size:13px;color:var(--t3);font-weight:700;flex:1;text-align:center}
+.tabs{display:flex;gap:3px;flex-wrap:wrap;margin-bottom:14px}
+.tab{padding:5px 11px;border:1px solid var(--b1);border-radius:var(--rad);background:var(--card);color:var(--t2);font-size:10px;font-weight:500;cursor:pointer}
+.tab:hover{color:var(--t1);border-color:var(--b2)}
+.tab.on{background:var(--acc);border-color:var(--acc);color:#fff}
+/* PROB DISPLAY — el núcleo de la herramienta */
+.prob3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:18px}
+.pcard{background:var(--card);border:1px solid var(--b1);border-radius:var(--rad2);padding:16px;text-align:center}
+.pcard-big{font-size:38px;font-weight:700;line-height:1;margin-bottom:4px}
+.pcard-label{font-size:11px;color:var(--t2);margin-bottom:4px}
+.pcard-conf{font-size:9px;color:var(--t3)}
+.pW{color:var(--g)}
+.pD{color:var(--a)}
+.pL{color:var(--r)}
+/* CONFIDENCE BAR */
+.conf-section{background:var(--card);border:1px solid var(--b1);border-radius:var(--rad);padding:12px 14px;margin-bottom:14px}
+.conf-row{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.conf-label{font-size:10px;color:var(--t2);width:130px;flex-shrink:0}
+.conf-track{flex:1;height:8px;background:var(--bg3);border-radius:4px;overflow:hidden}
+.conf-fill{height:100%;border-radius:4px}
+.conf-val{font-size:11px;font-weight:700;width:36px;text-align:right}
+/* FACTOR CARDS */
+.factor-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:8px;margin-bottom:14px}
+.fc{background:var(--card);border:1px solid var(--b1);border-radius:var(--rad);padding:10px 12px}
+.fc-icon{font-size:16px;margin-bottom:4px}
+.fc-label{font-size:9px;color:var(--t3);margin-bottom:2px}
+.fc-val{font-size:13px;font-weight:600}
+.fc-sub{font-size:9px;color:var(--t2);margin-top:2px}
+/* MERCADO TABLE */
+.mktt{width:100%;border-collapse:collapse;font-size:11px;margin-bottom:14px}
+.mktt th{background:var(--bg3);padding:6px 10px;text-align:left;font-size:9px;color:var(--t3);border-bottom:1px solid var(--b1);text-transform:uppercase;letter-spacing:.04em}
+.mktt td{padding:6px 10px;border-bottom:1px solid var(--b1)}
+.mktt tr:last-child td{border-bottom:none}
+.mktt tr:hover td{background:var(--bg3)}
+.pct-cell{font-size:14px;font-weight:700}
+.conf-pill{display:inline-block;font-size:9px;padding:1px 6px;border-radius:10px;font-weight:600}
+.high{background:#14532c;color:#4ade7f}
+.mid{background:#422005;color:#fde267}
+.low{background:#450a0a;color:#fca4a4}
+.na{background:#1a1e28;color:#4f5a75}
+/* MODEL TAG */
+.mtag{display:inline-flex;align-items:center;gap:3px;font-size:9px;font-weight:600;padding:1px 6px;border-radius:10px}
+.melo{background:#1e3860;color:#93c4fd}
+.mform{background:#14532c;color:#4ade7f}
+.mctx{background:#422005;color:#fde267}
+.mai{background:#450a0a;color:#fca4a4}
+/* INFO */
+.ib{background:#0e1628;border:1px solid #1e3860;border-radius:var(--rad);padding:9px 12px;font-size:10px;color:var(--t2);line-height:1.7;margin-bottom:12px}
+.ib strong{color:var(--t1)}
+hr.d{border:none;border-top:1px solid var(--b1);margin:12px 0}
+.sl{font-size:9px;font-weight:600;color:var(--t3);text-transform:uppercase;letter-spacing:.07em;margin-bottom:8px}
+.back{background:transparent;border:1px solid var(--b1);border-radius:var(--rad);padding:4px 11px;color:var(--t2);font-size:10px;cursor:pointer;margin-bottom:12px;display:inline-flex;align-items:center;gap:4px}
+.back:hover{background:var(--bg3);color:var(--t1)}
+.ptab{width:100%;border-collapse:collapse;font-size:11px}
+.ptab th{text-align:left;padding:6px 9px;color:var(--t3);font-weight:500;border-bottom:1px solid var(--b1);font-size:9px;text-transform:uppercase;letter-spacing:.04em}
+.ptab td{padding:6px 9px;border-bottom:1px solid var(--b1)}
+.ptab tr:hover td{background:var(--bg3)}
+.badge{display:inline-block;padding:1px 6px;border-radius:3px;font-size:9px;font-weight:700;text-transform:uppercase}
+.bg2{background:#14532c;color:#4ade7f}
+.ba2{background:#422005;color:#fde267}
+.bb2{background:#1e3860;color:#93c4fd}
+/* FORMULA */
+.fbox{background:var(--bg3);border:1px solid var(--b2);border-radius:var(--rad);padding:13px;font-size:10px;color:var(--t2);line-height:2;margin-bottom:12px}
+.fbox code{color:var(--tl);font-family:monospace;font-size:10px}
+.fbox strong{color:var(--t1)}
+::-webkit-scrollbar{width:4px}
+::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:var(--b2);border-radius:2px}
+</style>
+</head>
+<body>
+<div class="layout">
+  <div class="sidebar">
+    <div class="hdr">
+      <div class="hdr-logo">Mundial <em>2026</em> · Probabilidades Reales</div>
+      <div class="hdr-sub">Sin margen de casa · Para que ganes tú</div>
+      <div class="notice">
+        <strong>¿Cómo usarlo?</strong><br>
+        1. Consulta aquí la probabilidad real de cada mercado<br>
+        2. Abre Bet365 y mira la cuota del mismo mercado<br>
+        3. Si la cuota implícita de Bet365 es menor que la probabilidad real → la casa tiene valor → <strong>no apuestes</strong><br>
+        4. Si la cuota implícita de Bet365 es mayor → hay valor para ti → considera apostar
+      </div>
+    </div>
+    <div class="sb-search"><input id="sbq" placeholder="Buscar selección..." oninput="filterSb(this.value)"></div>
+    <div class="sb-list" id="sbList"></div>
+  </div>
+  <div class="main"><div class="pg" id="main"></div></div>
+</div>
+<script>
+// ─── DATOS DE SELECCIONES ────────────────────────────────────────────────────
+// elo: rating ELO (World Football Elo Ratings, calibrado jun-2026)
+// formPts: puntos de forma (últimos 8 partidos: W=3, D=1, L=0) — máximo 24
+// injPenalty: penalización por lesiones clave (0-0.08)
+// cornBase, yellBase, shotsBase: medias reales excluyendo goleadas vs ranking70+
+const T = [
+  {id:"esp",n:"España",      f:"🇪🇸",r:1, c:"UEFA",    g:"H",
+   elo:2100, formPts:22, injPenalty:0.04,
+   cornBase:5.2, yellBase:1.5, shotsBase:13.0, savesBase:2.4, poss:63,
+   form:["W","W","W","W","D","W","W","W"], vForm:true,
+   squad:["Unai Simón","Joan García","David Raya","Cucurella","Grimaldo","Cubarsí","Laporte","Marc Pubill","Eric García","M.Llorente","Pedro Porro","Pedri","Fabián Ruiz","Zubimendi","Gavi","Rodri","Á.Baena","Mikel Merino","Oyarzabal","Dani Olmo","Nico Williams","Yeremy Pino","Ferran Torres","Borja Iglesias","Víctor Muñoz","Lamine Yamal"],
+   inj:["Yamal (muscular, duda debut)","Nico Williams (muscular, duda)"],
+   topG:"L.Yamal/Oyarzabal", topF:"Rodri", topGK:"Unai Simón", topP:"Pedri",
+   sty:"posesion"},
+
+  {id:"fra",n:"Francia",     f:"🇫🇷",r:2, c:"UEFA",    g:"E",
+   elo:2050, formPts:19, injPenalty:0.02,
+   cornBase:5.0, yellBase:1.8, shotsBase:12.5, savesBase:2.7, poss:55,
+   form:["W","W","D","W","W","L","W","W"], vForm:true,
+   squad:["Maignan","Lloris","Areola","T.Hernandez","Camavinga","Upamecano","Konaté","Pavard","Saliba","Koundé","Clauss","Mbappé","Griezmann","Tchouameni","Rabiot","Zaire-Emery","Dembélé","Coman","Thuram","Kolo Muani","Barcola","Fofana","Kanté","Guendouzi","Upamecano","Pavard"],
+   inj:[], topG:"K.Mbappé", topF:"Tchouameni", topGK:"Maignan", topP:"Griezmann",
+   sty:"fisico"},
+
+  {id:"arg",n:"Argentina",   f:"🇦🇷",r:3, c:"CONMEBOL",g:"C",
+   elo:2070, formPts:21, injPenalty:0.01,
+   cornBase:4.9, yellBase:1.7, shotsBase:12.2, savesBase:2.5, poss:56,
+   form:["W","W","W","W","W","D","W","L"], vForm:true,
+   squad:["E.Martínez","Rulli","Armani","Molina","Montiel","Romero","Lisandro M.","L.Martínez","Tagliafico","Acuña","De Paul","Enzo Fdz.","Mac Allister","Lo Celso","Almada","Messi","J.Álvarez","Lautaro M.","Di María","Dybala","Simeone G.","N.Paz","K.De La Vega","N.González","Correa","Retegui"],
+   inj:[], topG:"L.Messi/J.Álvarez", topF:"R.De Paul", topGK:"E.Martínez", topP:"L.Messi",
+   sty:"ofensivo"},
+
+  {id:"eng",n:"Inglaterra",  f:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",r:4, c:"UEFA",    g:"D",
+   elo:2020, formPts:20, injPenalty:0.01,
+   cornBase:4.9, yellBase:1.7, shotsBase:12.2, savesBase:2.7, poss:55,
+   form:["W","D","W","W","W","D","W","W"], vForm:true,
+   squad:["Pickford","Raya","Flekken","Alexander-Arnold","Walker","Stones","Guehi","Trippier","Shaw","Rice","Bellingham","Saka","Foden","Palmer","Kane","Rashford","Gordon","Mainoo","Dunk","Konsa","Chilwell","Gallagher","Maguire","Grealish","Mount","Trent A-A"],
+   inj:[], topG:"H.Kane", topF:"D.Rice", topGK:"J.Pickford", topP:"J.Bellingham",
+   sty:"fisico"},
+
+  {id:"bra",n:"Brasil",      f:"🇧🇷",r:5, c:"CONMEBOL",g:"B",
+   elo:2040, formPts:17, injPenalty:0.02,
+   cornBase:4.8, yellBase:1.6, shotsBase:12.0, savesBase:2.6, poss:58,
+   form:["W","L","W","W","D","W","L","W"], vForm:true,
+   squad:["Alisson","Ederson","Weverton","Danilo","Militão","Marquinhos","G.Magalhães","Wendell","Casemiro","Bruno G.","Lucas P.","Paquetá","Rodrygo","Vinicius","Raphinha","Endrick","Savinho","G.Martinelli","L.Henrique","Andreas P.","Bremer","Gerson","Yan Couto","Bento","Alex Sandro","Éder"],
+   inj:["Wesley (aductor, baja)"], topG:"Vinicius Jr", topF:"Casemiro", topGK:"Alisson", topP:"Rodrygo",
+   sty:"ofensivo"},
+
+  {id:"bel",n:"Bélgica",     f:"🇧🇪",r:6, c:"UEFA",    g:"G",
+   elo:1990, formPts:20, injPenalty:0.01,
+   cornBase:4.9, yellBase:1.5, shotsBase:12.0, savesBase:2.6, poss:54,
+   form:["W","W","W","D","W","L","W","W"], vForm:true,
+   squad:["Casteels","Mignolet","Kaminski","Castagne","Alderweireld","Vertonghen","T.Hazard","Boyata","De Cuyper","De Bruyne","Tielemans","Witsel","Onana","Doku","De Ketelaere","Lukaku","Openda","Batshuayi","Malen","Carrasco","Saelemaekers","Theate","Faes","Debast","Mangala","Vranckx"],
+   inj:[], topG:"R.Lukaku", topF:"Tielemans", topGK:"K.Casteels", topP:"K.De Bruyne",
+   sty:"ofensivo"},
+
+  {id:"ned",n:"Países Bajos",f:"🇳🇱",r:7, c:"UEFA",    g:"A",
+   elo:1980, formPts:20, injPenalty:0.01,
+   cornBase:4.8, yellBase:1.6, shotsBase:11.9, savesBase:2.7, poss:56,
+   form:["W","W","D","W","W","W","D","W"], vForm:true,
+   squad:["Flekken","Verbruggen","Cillessen","Dumfries","De Vrij","Van Dijk","Timber","Blind","F.de Jong","Wijnaldum","Gravenberch","Koopmeiners","Depay","Gakpo","Bergwijn","D.Malen","Simons","Veerman","Aké","Frimpong","Brobbey","Zirkzee","Stengs","Clasie","Boscagli","F.De Jong"],
+   inj:[], topG:"M.Depay", topF:"F.de Jong", topGK:"M.Flekken", topP:"X.Simons",
+   sty:"ofensivo"},
+
+  {id:"por",n:"Portugal",    f:"🇵🇹",r:8, c:"UEFA",    g:"F",
+   elo:1975, formPts:20, injPenalty:0.01,
+   cornBase:5.0, yellBase:1.6, shotsBase:12.3, savesBase:2.6, poss:57,
+   form:["W","W","W","W","D","W","W","L"], vForm:true,
+   squad:["D.Costa","Rui P.","J.Sá","Cancelo","Semedo","Pepe","R.Dias","Danilo","Guerreiro","B.Fernandes","Palhinha","Vitinha","Neves","Moutinho","Ronaldo","Leao","Rafa","Felix","Gonçalves","Pedro","Trincão","Mendes","Horta","Neto","Bragança","Dalot"],
+   inj:[], topG:"C.Ronaldo", topF:"Palhinha", topGK:"D.Costa", topP:"B.Fernandes",
+   sty:"ofensivo"},
+
+  {id:"ger",n:"Alemania",    f:"🇩🇪",r:9, c:"UEFA",    g:"I",
+   elo:1960, formPts:19, injPenalty:0.01,
+   cornBase:4.9, yellBase:1.7, shotsBase:11.8, savesBase:2.8, poss:56,
+   form:["W","W","W","D","W","W","D","L"], vForm:true,
+   squad:["Neuer","ter Stegen","Trapp","Kimmich","Schlotterbeck","Rüdiger","Tah","Raum","Mittelstädt","Kroos","Gündogan","Goretzka","Wirtz","Musiala","Gnabry","Havertz","Müller","Sané","Fullkrug","Nmecha","Hofmann","Groß","Anton","Beier","Adeyemi","Zeller"],
+   inj:[], topG:"F.Wirtz", topF:"J.Kimmich", topGK:"M.Neuer", topP:"T.Musiala",
+   sty:"mixto"},
+
+  {id:"ita",n:"Italia",      f:"🇮🇹",r:10,c:"UEFA",    g:"J",
+   elo:1940, formPts:18, injPenalty:0.01,
+   cornBase:4.4, yellBase:1.9, shotsBase:10.8, savesBase:3.1, poss:53,
+   form:["W","D","W","W","D","W","D","W"], vForm:true,
+   squad:["Donnarumma","Meret","Vicario","Di Lorenzo","Bastoni","Acerbi","Bonucci","Spinazzola","Jorginho","Barella","Verratti","Tonali","Pellegrini","Zaniolo","Chiesa","Immobile","Raspadori","Scamacca","Retegui","Frattesi","Gatti","Fagioli","Locatelli","Cristante","Chiellini","Florenzi"],
+   inj:[], topG:"F.Chiesa", topF:"N.Barella", topGK:"G.Donnarumma", topP:"L.Pellegrini",
+   sty:"defensivo"},
+
+  {id:"mar",n:"Marruecos",   f:"🇲🇦",r:11,c:"CAF",     g:"K",
+   elo:1900, formPts:21, injPenalty:0.00,
+   cornBase:4.1, yellBase:1.9, shotsBase:10.4, savesBase:3.3, poss:46,
+   form:["W","W","D","W","W","D","W","W"], vForm:true,
+   squad:["Bono","Munir","Zniti","Hakimi","Mazraoui","Saiss","Aguerd","Boufal","Ounahi","Amrabat","Amallah","Ziyech","En-Nesyri","Abde","Sabiri","Benoun","El Yamiq","Louza","Dari","Aboukhlal","Benhalib","Cheddira","Rahimi","Tissoudali","Benali","Tagnaouti"],
+   inj:[], topG:"Y.En-Nesyri", topF:"S.Amrabat", topGK:"Y.Bono", topP:"H.Ziyech",
+   sty:"defensivo"},
+
+  {id:"cro",n:"Croacia",     f:"🇭🇷",r:12,c:"UEFA",    g:"F",
+   elo:1890, formPts:17, injPenalty:0.00,
+   cornBase:4.6, yellBase:1.8, shotsBase:11.0, savesBase:3.0, poss:51,
+   form:["D","W","W","W","D","L","W","W"], vForm:true,
+   squad:["Livaković","Gvardiol","Sosa","Juranovic","Modrić","Brozović","Kovacic","Pašalić","Vlašić","Perisic","Budimir","Kramarić","Ivanušec","Majer","Rog","Sutalo","Erlic","Stanišić","Musa","Oršić","Benković","Jakić","Vida","Pongračić","Šutalo","Gvardiol J."],
+   inj:[], topG:"L.Modrić", topF:"M.Kovacic", topGK:"D.Livaković", topP:"L.Modrić",
+   sty:"mixto"},
+
+  {id:"jpn",n:"Japón",       f:"🇯🇵",r:13,c:"AFC",     g:"B",
+   elo:1880, formPts:23, injPenalty:0.00,
+   cornBase:4.2, yellBase:1.7, shotsBase:10.3, savesBase:3.2, poss:50,
+   form:["W","W","W","W","W","D","W","W"], vForm:true,
+   squad:["Gonda","Nakamura","Schmidt","Nagatomo","Taniguchi","Itakura","Tomiyasu","Hiroki Ito","Sugawara","Endo","Ao Tanaka","Kamada","Doan","Minamino","Kubo","Ueda","Maeda","Ogawa","Nakamura K.","Shiogai","Goto K.","Suzuki I.","Sano","Seko","Watanabe","Suzuki J."],
+   inj:[], topG:"T.Kubo", topF:"W.Endo", topGK:"S.Gonda", topP:"T.Kubo",
+   sty:"defensivo"},
+
+  {id:"usa",n:"EE.UU.",      f:"🇺🇸",r:14,c:"CONCACAF",g:"A",
+   elo:1870, formPts:19, injPenalty:0.01,
+   cornBase:4.5, yellBase:1.7, shotsBase:10.9, savesBase:2.9, poss:51,
+   form:["W","W","W","D","W","L","W","W"], vForm:true,
+   squad:["Turner","Horvath","Johnson","Dest","Richards","Zimmermann","Carter-Vickers","Long","Robinson","Adams","McKennie","Musah","Reyna","Weah","Pulisic","Balogun","Ferreira","Sargent","Roldan","Aaronson","Llanez","Miazga","Yedlin","Acosta","Busio","Konrad"],
+   inj:[], topG:"C.Pulisic", topF:"T.Adams", topGK:"M.Turner", topP:"C.Pulisic",
+   sty:"fisico"},
+
+  {id:"mex",n:"México",      f:"🇲🇽",r:15,c:"CONCACAF",g:"A",
+   elo:1860, formPts:18, injPenalty:0.02,
+   cornBase:4.4, yellBase:1.7, shotsBase:10.6, savesBase:3.0, poss:50,
+   form:["W","W","W","D","W","W","D","L"], vForm:true,
+   squad:["Ochoa","Acevedo","Cota","Sánchez","Moreno","Domínguez","Araujo","Montes","Gallardo","H.Lozano","Álvarez E.","Herrera","Romo","Antuna","Jiménez R.","Vega","Chávez","Orrantia","Angulo","Alvarado","Gutiérrez","Zaldívar","Reyes","Pineda","Buen Día","Flores M."],
+   inj:["M.Flores (LCA, baja)"], topG:"H.Lozano", topF:"A.Guardado", topGK:"G.Ochoa", topP:"E.Álvarez",
+   sty:"mixto"},
+
+  {id:"uru",n:"Uruguay",     f:"🇺🇾",r:16,c:"CONMEBOL",g:"H",
+   elo:1870, formPts:18, injPenalty:0.01,
+   cornBase:4.3, yellBase:2.0, shotsBase:10.6, savesBase:3.1, poss:49,
+   form:["W","D","W","W","D","W","L","W"], vForm:true,
+   squad:["Rochet","Muslera","Campaña","Cáceres","Giménez","Godín","Araújo","Olivera","Viña","Bentancur","Torreira","Valverde","F.Valverde","Pellistri","Suárez","Núñez","Cavani","De Arrascaeta","Ugarte","Herrera","Coates","Marichal","Gómez","Rodríguez","Arévalo","Méndez"],
+   inj:[], topG:"D.Núñez", topF:"R.Bentancur", topGK:"S.Rochet", topP:"F.Valverde",
+   sty:"defensivo"},
+
+  {id:"col",n:"Colombia",    f:"🇨🇴",r:17,c:"CONMEBOL",g:"D",
+   elo:1855, formPts:20, injPenalty:0.00,
+   cornBase:4.5, yellBase:1.8, shotsBase:11.0, savesBase:2.9, poss:52,
+   form:["W","W","D","W","W","W","D","W"], vForm:false,
+   squad:[], inj:[], topG:"L.Díaz", topF:"R.Arias", topGK:"C.Vargas", topP:"J.Rodriguez",
+   sty:"ofensivo"},
+
+  {id:"nor",n:"Noruega",     f:"🇳🇴",r:18,c:"UEFA",    g:"E",
+   elo:1820, formPts:19, injPenalty:0.01,
+   cornBase:4.3, yellBase:1.6, shotsBase:10.4, savesBase:3.0, poss:49,
+   form:["W","W","D","W","D","W","W","L"], vForm:false,
+   squad:[], inj:[], topG:"E.Haaland", topF:"M.Ødegaard", topGK:"Ø.Nyland", topP:"M.Ødegaard",
+   sty:"fisico"},
+
+  {id:"den",n:"Dinamarca",   f:"🇩🇰",r:19,c:"UEFA",    g:"L",
+   elo:1840, formPts:19, injPenalty:0.00,
+   cornBase:4.5, yellBase:1.6, shotsBase:10.8, savesBase:3.0, poss:52,
+   form:["W","D","W","W","D","W","W","D"], vForm:false,
+   squad:[], inj:[], topG:"C.Eriksen", topF:"P.Højbjerg", topGK:"K.Schmeichel", topP:"C.Eriksen",
+   sty:"defensivo"},
+
+  {id:"sui",n:"Suiza",       f:"🇨🇭",r:20,c:"UEFA",    g:"N",
+   elo:1830, formPts:19, injPenalty:0.00,
+   cornBase:4.4, yellBase:1.6, shotsBase:10.6, savesBase:3.0, poss:53,
+   form:["W","W","D","W","D","W","W","D"], vForm:false,
+   squad:[], inj:[], topG:"X.Shaqiri", topF:"G.Xhaka", topGK:"Y.Sommer", topP:"G.Xhaka",
+   sty:"defensivo"},
+
+  {id:"aut",n:"Austria",     f:"🇦🇹",r:21,c:"UEFA",    g:"N",
+   elo:1820, formPts:19, injPenalty:0.00,
+   cornBase:4.5, yellBase:1.7, shotsBase:10.8, savesBase:2.9, poss:51,
+   form:["W","W","D","W","W","D","W","L"], vForm:false,
+   squad:[], inj:[], topG:"M.Sabitzer", topF:"K.Laimer", topGK:"P.Pentz", topP:"M.Sabitzer",
+   sty:"mixto"},
+
+  {id:"tur",n:"Turquía",     f:"🇹🇷",r:22,c:"UEFA",    g:"O",
+   elo:1810, formPts:17, injPenalty:0.01,
+   cornBase:4.5, yellBase:1.9, shotsBase:10.7, savesBase:2.9, poss:50,
+   form:["W","D","L","W","W","D","W","W"], vForm:false,
+   squad:[], inj:[], topG:"H.Calhanoglu", topF:"M.Demiral", topGK:"A.Günok", topP:"H.Calhanoglu",
+   sty:"mixto"},
+
+  {id:"ukr",n:"Ucrania",     f:"🇺🇦",r:23,c:"UEFA",    g:"O",
+   elo:1800, formPts:19, injPenalty:0.00,
+   cornBase:4.5, yellBase:1.7, shotsBase:10.8, savesBase:2.9, poss:51,
+   form:["W","W","D","W","D","W","W","D"], vForm:false,
+   squad:[], inj:[], topG:"M.Mudryk", topF:"A.Zinchenko", topGK:"A.Trubin", topP:"M.Mudryk",
+   sty:"ofensivo"},
+
+  {id:"svk",n:"Eslovaquia",  f:"🇸🇰",r:24,c:"UEFA",    g:"W",
+   elo:1740, formPts:17, injPenalty:0.00,
+   cornBase:3.9, yellBase:1.8, shotsBase:9.6, savesBase:3.4, poss:44,
+   form:["W","D","W","D","L","W","D","W"], vForm:false,
+   squad:[], inj:[], topG:"O.Duda", topF:"S.Lobotka", topGK:"M.Dubravka", topP:"S.Lobotka",
+   sty:"defensivo"},
+
+  {id:"pol",n:"Polonia",     f:"🇵🇱",r:25,c:"UEFA",    g:"G",
+   elo:1780, formPts:17, injPenalty:0.00,
+   cornBase:4.1, yellBase:1.8, shotsBase:9.9, savesBase:3.3, poss:46,
+   form:["W","D","W","L","W","D","W","W"], vForm:false,
+   squad:[], inj:[], topG:"R.Lewandowski", topF:"Krychowiak", topGK:"W.Szczęsny", topP:"R.Lewandowski",
+   sty:"fisico"},
+
+  {id:"kor",n:"Corea S.",    f:"🇰🇷",r:26,c:"AFC",     g:"I",
+   elo:1790, formPts:17, injPenalty:0.01,
+   cornBase:4.1, yellBase:1.7, shotsBase:10.0, savesBase:3.1, poss:49,
+   form:["L","W","D","W","W","L","W","W"], vForm:false,
+   squad:[], inj:[], topG:"H.Son", topF:"Kim Min-jae", topGK:"Kim Seung-gyu", topP:"H.Son",
+   sty:"mixto"},
+
+  {id:"aus",n:"Australia",   f:"🇦🇺",r:27,c:"AFC",     g:"J",
+   elo:1760, formPts:17, injPenalty:0.00,
+   cornBase:4.0, yellBase:1.7, shotsBase:9.8, savesBase:3.2, poss:48,
+   form:["W","W","D","W","L","W","W","D"], vForm:false,
+   squad:[], inj:[], topG:"M.Leckie", topF:"A.Mooy", topGK:"M.Ryan", topP:"A.Mooy",
+   sty:"fisico"},
+
+  {id:"ecu",n:"Ecuador",     f:"🇪🇨",r:28,c:"CONMEBOL",g:"M",
+   elo:1750, formPts:17, injPenalty:0.00,
+   cornBase:4.2, yellBase:1.8, shotsBase:10.3, savesBase:3.1, poss:49,
+   form:["W","W","D","L","W","W","D","W"], vForm:false,
+   squad:[], inj:[], topG:"M.Caicedo", topF:"A.Gruezo", topGK:"H.Galíndez", topP:"M.Caicedo",
+   sty:"mixto"},
+
+  {id:"cze",n:"Rep. Checa",  f:"🇨🇿",r:29,c:"UEFA",    g:"I",
+   elo:1760, formPts:16, injPenalty:0.00,
+   cornBase:4.0, yellBase:1.7, shotsBase:9.4, savesBase:3.3, poss:46,
+   form:["W","D","W","D","L","W","D","W"], vForm:false,
+   squad:[], inj:[], topG:"P.Schick", topF:"T.Souček", topGK:"J.Staněk", topP:"T.Souček",
+   sty:"mixto"},
+
+  {id:"sco",n:"Escocia",     f:"🏴󠁧󠁢󠁳󠁣󠁴󠁿",r:30,c:"UEFA",    g:"J",
+   elo:1720, formPts:16, injPenalty:0.00,
+   cornBase:3.9, yellBase:1.7, shotsBase:9.5, savesBase:3.2, poss:47,
+   form:["W","D","D","W","L","W","D","W"], vForm:false,
+   squad:[], inj:[], topG:"K.Tierney", topF:"S.McTominay", topGK:"A.Gunn", topP:"S.McTominay",
+   sty:"fisico"},
+
+  {id:"hun",n:"Hungría",     f:"🇭🇺",r:31,c:"UEFA",    g:"P",
+   elo:1730, formPts:16, injPenalty:0.00,
+   cornBase:3.9, yellBase:1.8, shotsBase:9.3, savesBase:3.4, poss:45,
+   form:["W","D","W","D","W","L","D","W"], vForm:false,
+   squad:[], inj:[], topG:"D.Szalai", topF:"A.Schäfer", topGK:"P.Gulácsi", topP:"A.Schäfer",
+   sty:"defensivo"},
+
+  {id:"sen",n:"Senegal",     f:"🇸🇳",r:32,c:"CAF",     g:"E",
+   elo:1760, formPts:18, injPenalty:0.01,
+   cornBase:4.2, yellBase:1.8, shotsBase:10.3, savesBase:3.1, poss:47,
+   form:["W","W","D","W","L","W","W","D"], vForm:false,
+   squad:[], inj:[], topG:"S.Mané", topF:"I.Gueye", topGK:"E.Mendy", topP:"S.Mané",
+   sty:"fisico"},
+
+  {id:"ngr",n:"Nigeria",     f:"🇳🇬",r:33,c:"CAF",     g:"L",
+   elo:1730, formPts:17, injPenalty:0.00,
+   cornBase:4.1, yellBase:1.9, shotsBase:10.0, savesBase:3.2, poss:47,
+   form:["W","D","W","W","L","W","D","W"], vForm:false,
+   squad:[], inj:[], topG:"V.Osimhen", topF:"W.Ndidi", topGK:"F.Uzoho", topP:"V.Osimhen",
+   sty:"fisico"},
+
+  {id:"irn",n:"Irán",        f:"🇮🇷",r:34,c:"AFC",     g:"K",
+   elo:1750, formPts:18, injPenalty:0.00,
+   cornBase:3.8, yellBase:2.0, shotsBase:9.0, savesBase:3.7, poss:42,
+   form:["W","D","W","W","D","L","W","W"], vForm:false,
+   squad:[], inj:[], topG:"M.Taremi", topF:"E.Hajsafi", topGK:"A.Beiranvand", topP:"M.Taremi",
+   sty:"defensivo"},
+
+  {id:"alg",n:"Argelia",     f:"🇩🇿",r:35,c:"CAF",     g:"C",
+   elo:1700, formPts:17, injPenalty:0.00,
+   cornBase:4.0, yellBase:1.9, shotsBase:9.8, savesBase:3.4, poss:45,
+   form:["W","D","W","W","D","W","L","W"], vForm:false,
+   squad:[], inj:[], topG:"R.Mahrez", topF:"I.Bennacer", topGK:"M.Mbolhi", topP:"R.Mahrez",
+   sty:"defensivo"},
+
+  {id:"egy",n:"Egipto",      f:"🇪🇬",r:36,c:"CAF",     g:"G",
+   elo:1680, formPts:16, injPenalty:0.00,
+   cornBase:3.9, yellBase:1.9, shotsBase:9.6, savesBase:3.3, poss:44,
+   form:["W","D","D","W","W","L","W","D"], vForm:false,
+   squad:[], inj:[], topG:"M.Salah", topF:"T.El-Nenny", topGK:"M.El-Shenawy", topP:"M.Salah",
+   sty:"defensivo"},
+
+  {id:"can",n:"Canadá",      f:"🇨🇦",r:37,c:"CONCACAF",g:"A",
+   elo:1720, formPts:17, injPenalty:0.00,
+   cornBase:4.2, yellBase:1.7, shotsBase:10.3, savesBase:3.1, poss:48,
+   form:["W","D","W","W","D","W","L","W"], vForm:false,
+   squad:[], inj:[], topG:"A.Davies/J.David", topF:"M.Eustaquio", topGK:"M.Crepeau", topP:"A.Davies",
+   sty:"fisico"},
+
+  {id:"irq",n:"Iraq",        f:"🇮🇶",r:38,c:"AFC",     g:"N",
+   elo:1660, formPts:14, injPenalty:0.00,
+   cornBase:3.6, yellBase:2.0, shotsBase:8.4, savesBase:3.8, poss:40,
+   form:["D","W","W","D","L","W","D","L"], vForm:false,
+   squad:[], inj:[], topG:"A.Al-Hamdani", topF:"J.Mahdi", topGK:"J.Hameed", topP:"A.Al-Hamdani",
+   sty:"defensivo"},
+
+  {id:"rsa",n:"Sudáfrica",   f:"🇿🇦",r:39,c:"CAF",     g:"R",
+   elo:1590, formPts:14, injPenalty:0.00,
+   cornBase:3.6, yellBase:2.0, shotsBase:8.7, savesBase:3.8, poss:40,
+   form:["L","D","W","D","W","L","D","W"], vForm:false,
+   squad:[], inj:[], topG:"P.Tau", topF:"B.Zungu", topGK:"R.Williams", topP:"P.Tau",
+   sty:"fisico"},
+
+  {id:"sau",n:"Arabia Saudí",f:"🇸🇦",r:40,c:"AFC",     g:"H",
+   elo:1640, formPts:13, injPenalty:0.01,
+   cornBase:3.6, yellBase:2.1, shotsBase:8.5, savesBase:3.9, poss:40,
+   form:["L","D","W","W","L","W","D","L"], vForm:false,
+   squad:[], inj:[], topG:"Al-Dawsari", topF:"Al-Faraj", topGK:"Al-Owais", topP:"Al-Dawsari",
+   sty:"defensivo"},
+
+  {id:"qat",n:"Catar",       f:"🇶🇦",r:41,c:"AFC",     g:"K",
+   elo:1590, formPts:14, injPenalty:0.00,
+   cornBase:3.7, yellBase:2.0, shotsBase:8.7, savesBase:3.7, poss:42,
+   form:["D","W","L","W","D","W","L","D"], vForm:false,
+   squad:[], inj:[], topG:"A.Afif", topF:"K.Boudiaf", topGK:"Al-Sheeb", topP:"A.Afif",
+   sty:"defensivo"},
+
+  {id:"civ",n:"C.Marfil",    f:"🇨🇮",r:42,c:"CAF",     g:"T",
+   elo:1630, formPts:17, injPenalty:0.00,
+   cornBase:3.9, yellBase:1.9, shotsBase:9.5, savesBase:3.4, poss:45,
+   form:["W","W","D","W","W","D","W","L"], vForm:false,
+   squad:[], inj:[], topG:"S.Adingra", topF:"F.Sangaré", topGK:"B.Badra", topP:"S.Adingra",
+   sty:"fisico"},
+
+  {id:"cmr",n:"Camerún",     f:"🇨🇲",r:43,c:"CAF",     g:"T",
+   elo:1560, formPts:15, injPenalty:0.00,
+   cornBase:3.8, yellBase:2.0, shotsBase:9.3, savesBase:3.4, poss:44,
+   form:["D","W","W","D","L","W","D","W"], vForm:false,
+   squad:[], inj:[], topG:"V.Aboubakar", topF:"A.Anguissa", topGK:"A.Onana", topP:"A.Anguissa",
+   sty:"fisico"},
+
+  {id:"gha",n:"Ghana",       f:"🇬🇭",r:44,c:"CAF",     g:"T",
+   elo:1550, formPts:15, injPenalty:0.00,
+   cornBase:3.7, yellBase:2.0, shotsBase:9.0, savesBase:3.6, poss:43,
+   form:["D","W","L","W","D","W","D","W"], vForm:false,
+   squad:[], inj:[], topG:"J.Ayew", topF:"T.Partey", topGK:"L.Ati Zigi", topP:"T.Partey",
+   sty:"fisico"},
+
+  {id:"mal",n:"Mali",        f:"🇲🇱",r:45,c:"CAF",     g:"R",
+   elo:1540, formPts:16, injPenalty:0.00,
+   cornBase:3.7, yellBase:2.0, shotsBase:8.9, savesBase:3.6, poss:42,
+   form:["W","D","W","L","D","W","W","D"], vForm:false,
+   squad:[], inj:[], topG:"M.Kouyaté", topF:"D.Samassékou", topGK:"D.Diarra", topP:"M.Kouyaté",
+   sty:"fisico"},
+
+  {id:"uzb",n:"Uzbekistán",  f:"🇺🇿",r:46,c:"AFC",     g:"O",
+   elo:1630, formPts:16, injPenalty:0.00,
+   cornBase:3.8, yellBase:1.8, shotsBase:8.9, savesBase:3.6, poss:43,
+   form:["W","W","D","W","D","L","W","D"], vForm:false,
+   squad:[], inj:[], topG:"E.Shomurodov", topF:"O.Zoirov", topGK:"U.Nishonov", topP:"E.Shomurodov",
+   sty:"mixto"},
+
+  {id:"jor",n:"Jordania",    f:"🇯🇴",r:47,c:"AFC",     g:"B",
+   elo:1600, formPts:13, injPenalty:0.00,
+   cornBase:3.5, yellBase:2.0, shotsBase:8.2, savesBase:3.9, poss:39,
+   form:["D","L","W","D","W","L","D","W"], vForm:false,
+   squad:[], inj:[], topG:"M.Al-Tamari", topF:"Y.Al-Naimat", topGK:"Y.Amer", topP:"M.Al-Tamari",
+   sty:"defensivo"},
+
+  {id:"crc",n:"Costa Rica",  f:"🇨🇷",r:48,c:"CONCACAF",g:"Q",
+   elo:1600, formPts:14, injPenalty:0.00,
+   cornBase:3.6, yellBase:2.0, shotsBase:8.7, savesBase:3.8, poss:40,
+   form:["D","W","D","L","W","D","W","D"], vForm:false,
+   squad:[], inj:[], topG:"B.Ruiz", topF:"C.Waston", topGK:"K.Navas", topP:"B.Ruiz",
+   sty:"defensivo"},
+
+  {id:"pan",n:"Panamá",      f:"🇵🇦",r:49,c:"CONCACAF",g:"U",
+   elo:1580, formPts:15, injPenalty:0.00,
+   cornBase:3.7, yellBase:2.0, shotsBase:8.9, savesBase:3.8, poss:39,
+   form:["W","D","W","D","L","W","D","W"], vForm:false,
+   squad:[], inj:[], topG:"A.Fajardo", topF:"A.Davis", topGK:"L.Mosquera", topP:"A.Davis",
+   sty:"defensivo"},
+
+  {id:"chi",n:"Chile",       f:"🇨🇱",r:50,c:"CONMEBOL",g:"Q",
+   elo:1600, formPts:12, injPenalty:0.01,
+   cornBase:4.2, yellBase:1.8, shotsBase:10.2, savesBase:3.1, poss:49,
+   form:["L","D","W","L","D","W","D","L"], vForm:false,
+   squad:[], inj:[], topG:"A.Vidal", topF:"E.Pulgar", topGK:"C.Bravo", topP:"A.Sánchez",
+   sty:"ofensivo"},
+
+  {id:"ven",n:"Venezuela",   f:"🇻🇪",r:51,c:"CONMEBOL",g:"Q",
+   elo:1590, formPts:15, injPenalty:0.00,
+   cornBase:4.0, yellBase:1.8, shotsBase:9.8, savesBase:3.3, poss:45,
+   form:["D","W","W","D","L","W","D","W"], vForm:false,
+   squad:[], inj:[], topG:"Y.Soteldo", topF:"A.Rosales", topGK:"W.Farguez", topP:"Y.Soteldo",
+   sty:"mixto"},
+
+  {id:"par",n:"Paraguay",    f:"🇵🇾",r:52,c:"CONMEBOL",g:"M",
+   elo:1580, formPts:14, injPenalty:0.00,
+   cornBase:3.9, yellBase:2.0, shotsBase:9.5, savesBase:3.6, poss:41,
+   form:["D","W","L","D","W","D","L","W"], vForm:false,
+   squad:[], inj:[], topG:"M.Almirón", topF:"G.Balbuena", topGK:"A.Silva", topP:"M.Almirón",
+   sty:"fisico"},
+
+  {id:"per",n:"Perú",        f:"🇵🇪",r:53,c:"CONMEBOL",g:"S",
+   elo:1560, formPts:12, injPenalty:0.00,
+   cornBase:3.8, yellBase:1.9, shotsBase:9.3, savesBase:3.5, poss:43,
+   form:["L","D","W","L","D","W","L","D"], vForm:false,
+   squad:[], inj:[], topG:"A.Cueva", topF:"R.Tapia", topGK:"P.Gallese", topP:"A.Cueva",
+   sty:"mixto"},
+
+  {id:"tun",n:"Túnez",       f:"🇹🇳",r:54,c:"CAF",     g:"S",
+   elo:1560, formPts:15, injPenalty:0.00,
+   cornBase:3.7, yellBase:1.9, shotsBase:8.8, savesBase:3.5, poss:44,
+   form:["W","D","W","D","D","W","L","W"], vForm:false,
+   squad:[], inj:[], topG:"S.Msakni", topF:"E.Khazri", topGK:"A.Dahmen", topP:"S.Msakni",
+   sty:"defensivo"},
+
+  {id:"jam",n:"Jamaica",     f:"🇯🇲",r:55,c:"CONCACAF",g:"P",
+   elo:1530, formPts:13, injPenalty:0.00,
+   cornBase:3.6, yellBase:2.0, shotsBase:8.6, savesBase:3.7, poss:41,
+   form:["D","W","L","W","D","W","L","D"], vForm:false,
+   squad:[], inj:[], topG:"L.Bailey", topF:"A.Burke", topGK:"A.Blake", topP:"L.Bailey",
+   sty:"fisico"},
+
+  {id:"bol",n:"Bolivia",     f:"🇧🇴",r:56,c:"CONMEBOL",g:"S",
+   elo:1450, formPts:10, injPenalty:0.00,
+   cornBase:3.4, yellBase:2.1, shotsBase:8.6, savesBase:4.0, poss:37,
+   form:["L","L","D","W","L","D","L","W"], vForm:false,
+   squad:[], inj:[], topG:"M.Moreno", topF:"J.Quintero", topGK:"C.Viscarra", topP:"M.Moreno",
+   sty:"fisico"},
+
+  {id:"geo",n:"Georgia",     f:"🇬🇪",r:57,c:"UEFA",    g:"W",
+   elo:1640, formPts:12, injPenalty:0.00,
+   cornBase:3.7, yellBase:1.9, shotsBase:8.8, savesBase:3.7, poss:41,
+   form:["L","D","W","L","D","W","L","D"], vForm:false,
+   squad:[], inj:[], topG:"K.Kvaratskhelia", topF:"G.Kochorashvili", topGK:"G.Mamardashvili", topP:"K.Kvaratskhelia",
+   sty:"defensivo"},
+
+  {id:"cbv",n:"Cabo Verde",  f:"🇨🇻",r:58,c:"CAF",     g:"H",
+   elo:1440, formPts:13, injPenalty:0.00,
+   cornBase:3.4, yellBase:2.0, shotsBase:8.2, savesBase:4.0, poss:39,
+   form:["D","W","L","D","W","D","L","W"], vForm:false,
+   squad:[], inj:[], topG:"D.Tavares", topF:"M.Semedo", topGK:"K.Varela", topP:"D.Tavares",
+   sty:"defensivo"},
+
+  {id:"nzl",n:"Nueva Zelanda",f:"🇳🇿",r:59,c:"OFC",    g:"V",
+   elo:1380, formPts:11, injPenalty:0.00,
+   cornBase:3.2, yellBase:2.0, shotsBase:7.9, savesBase:4.3, poss:38,
+   form:["L","D","L","W","D","L","W","D"], vForm:false,
+   squad:[], inj:[], topG:"C.Wood", topF:"T.Bell", topGK:"O.Sail", topP:"C.Wood",
+   sty:"mixto"},
+
+  {id:"hai",n:"Haití",       f:"🇭🇹",r:60,c:"CONCACAF",g:"U",
+   elo:1360, formPts:10, injPenalty:0.00,
+   cornBase:3.2, yellBase:2.2, shotsBase:8.1, savesBase:4.2, poss:35,
+   form:["L","D","L","W","D","L","W","D"], vForm:false,
+   squad:[], inj:[], topG:"N.Noel", topF:"J.Pierre", topGK:"J.Voltaire", topP:"N.Noel",
+   sty:"fisico"},
+
+  {id:"cur",n:"Curazao",     f:"🇨🇼",r:61,c:"CONCACAF",g:"V",
+   elo:1340, formPts:11, injPenalty:0.00,
+   cornBase:3.3, yellBase:2.2, shotsBase:8.3, savesBase:4.1, poss:36,
+   form:["L","D","W","L","D","W","L","D"], vForm:false,
+   squad:[], inj:[], topG:"J.Kluivert", topF:"P.Van Aanholt", topGK:"M.Hiariej", topP:"J.Kluivert",
+   sty:"mixto"},
+];
+
+// ─── MOTOR: PROBABILIDADES REALES SIN MARGEN ─────────────────────────────────
+//
+// El objetivo es dar la probabilidad REAL del evento, no la que da una casa.
+// Una casa coge la probabilidad real y la infla (sube el % de victoria del favorito,
+// y así la cuota baja y ellos ganan margen). Nosotros hacemos lo contrario:
+// calculamos la probabilidad real lo más ajustada posible.
+//
+// Modelo en 3 capas:
+// 1. ELO: base matemática sin favoritismos
+// 2. Ajuste forma reciente: los últimos 8 partidos pesan más que el ELO histórico
+// 3. Contexto: lesiones clave, rival directo H2H (si disponible)
+//
+function calcReal(a, b) {
+  // ── CAPA 1: ELO puro ──────────────────────────────────────────────────────
+  // Fórmula estándar World Football Elo: P(win) = 1 / (10^(-ΔElo/400) + 1)
+  const eloDiff = a.elo - b.elo;
+  let pWin_elo = 1 / (Math.pow(10, -eloDiff / 400) + 1);
+
+  // ── CAPA 2: Ajuste por forma reciente ─────────────────────────────────────
+  // formPts: puntos de los últimos 8 partidos (máx 24)
+  // El equipo en mejor forma reciente tiene ventaja extra, independiente del ELO
+  const formNormA = a.formPts / 24; // 0-1
+  const formNormB = b.formPts / 24; // 0-1
+  const formAdj = (formNormA - formNormB) * 0.08; // máx ±8% de ajuste por forma
+  let pWin_adj = Math.min(0.92, Math.max(0.06, pWin_elo + formAdj));
+
+  // ── CAPA 3: Contexto — lesiones ───────────────────────────────────────────
+  // injPenalty: penalización por ausencias clave (estimada de convocatoria oficial)
+  pWin_adj = Math.max(0.05, pWin_adj - a.injPenalty + b.injPenalty);
+
+  // ── Probabilidad de empate ─────────────────────────────────────────────────
+  // El empate es más probable cuanto más equilibrado es el partido
+  // Referencia real: en Mundiales, ~25% de empates en grupos
+  const balance = 1 - Math.abs(pWin_adj - 0.5) * 2; // 0=desequilibrado, 1=50/50
+  const pDraw = Math.max(0.14, 0.26 * (0.4 + balance * 0.6));
+
+  // ── Probabilidad de derrota ───────────────────────────────────────────────
+  let pLoss = 1 - pWin_adj - pDraw;
+  if(pLoss < 0.04) { pLoss = 0.04; }
+
+  // Normalizar a exactamente 100%
+  const tot = pWin_adj + pDraw + pLoss;
+  const pW = pWin_adj / tot;
+  const pD = pDraw / tot;
+  const pL = pLoss / tot;
+
+  // ── xG: inferido de las probabilidades reales ─────────────────────────────
+  // No de goles de clasificatorias — de la probabilidad del partido
+  const lambdaA = Math.min(3.5, Math.max(0.3, pW * 2.8 + 0.05));
+  const lambdaB = Math.min(3.5, Math.max(0.3, pL * 2.8 + 0.05));
+
+  // ── Poisson para Over/Under ───────────────────────────────────────────────
+  function poi(l,k){let p=Math.exp(-l);for(let i=1;i<=k;i++)p*=l/i;return p}
+  function pOv(la,lb,n){
+    let p=0;
+    for(let ai=0;ai<=9;ai++) for(let bi=0;bi<=9;bi++) if(ai+bi>n) p+=poi(la,ai)*poi(lb,bi);
+    return Math.min(0.999,Math.max(0.001,p));
+  }
+  const o05=pOv(lambdaA,lambdaB,0);
+  const o15=pOv(lambdaA,lambdaB,1);
+  const o25=pOv(lambdaA,lambdaB,2);
+  const o35=pOv(lambdaA,lambdaB,3);
+  const o45=pOv(lambdaA,lambdaB,4);
+  const btts=(1-Math.exp(-lambdaA))*(1-Math.exp(-lambdaB));
+  const cs_a=Math.exp(-lambdaB);
+  const cs_b=Math.exp(-lambdaA);
+
+  // ── Córners ───────────────────────────────────────────────────────────────
+  const styMult={ofensivo:1.04,fisico:0.96,defensivo:0.87,mixto:1.00,posesion:1.03};
+  const cornA=Math.min(10,Math.max(2,a.cornBase*(styMult[b.sty]||1)));
+  const cornB=Math.min(10,Math.max(2,b.cornBase*(styMult[a.sty]||1)));
+  const cornT=+(cornA+cornB).toFixed(1);
+
+  // ── Tarjetas: suben en partidos igualados ─────────────────────────────────
+  const intensity=Math.max(0.8,1+(0.5-Math.abs(pW-0.42))*0.6);
+  const yellT=Math.min(7,Math.max(1.5,+(a.yellBase*intensity+b.yellBase*intensity*0.82).toFixed(1)));
+
+  // ── Remates ───────────────────────────────────────────────────────────────
+  const shotsA=Math.min(18,Math.max(4,+(a.shotsBase*(styMult[b.sty]||1)*(pW>0.5?1.03:0.97)).toFixed(1)));
+  const shotsOTA=Math.min(8,Math.max(1.5,+(shotsA*0.342).toFixed(1)));
+  const savesA=Math.min(6,Math.max(1,+(a.savesBase*(b.sty==="ofensivo"?1.1:b.sty==="defensivo"?0.88:1)).toFixed(1)));
+
+  // ── Confianza del modelo ──────────────────────────────────────────────────
+  // Indica qué tan fiable es la predicción según las diferencias de nivel
+  const eloGap=Math.abs(eloDiff);
+  const modelConf = eloGap>300?"alta":eloGap>150?"media":"baja";
+
+  return {
+    pW,pD,pL,
+    eloDiff,formAdj,pWin_elo,
+    lambdaA:+lambdaA.toFixed(2),lambdaB:+lambdaB.toFixed(2),
+    xgT:+(lambdaA+lambdaB).toFixed(2),
+    o05,o15,o25,o35,o45,btts,cs_a,cs_b,
+    cornA:+cornA.toFixed(1),cornB:+cornB.toFixed(1),cornT,
+    yellT,shotsA,shotsOTA,savesA,
+    modelConf,
+    injAdj:a.injPenalty-b.injPenalty,
+  };
+}
+
+// ─── HELPERS ─────────────────────────────────────────────────────────────────
+const byId=id=>T.find(t=>t.id===id);
+const pct=v=>(v*100).toFixed(1)+'%';
+const fb=r=>`<span class="fb ${r==='W'?'fw':r==='D'?'fd':'fl'}">${r}</span>`;
+const confPill=c=>`<span class="conf-pill ${c==='alta'?'high':c==='media'?'mid':'low'}">${c}</span>`;
+
+// Convertir probabilidad real a cuota justa (SIN margen)
+// Esto es lo que la casa debería pagar si fuera justa
+const fairOdds=p=>(1/p).toFixed(2);
+
+// ─── STATE ────────────────────────────────────────────────────────────────────
+let S={tid:null,rid:null,tab:'resultado',conf:'ALL'};
+
+// ─── SIDEBAR ─────────────────────────────────────────────────────────────────
+function renderSb(q=''){
+  const f=T.filter(t=>t.n&&(t.n.toLowerCase().includes(q.toLowerCase())||t.c.toLowerCase().includes(q.toLowerCase())));
+  document.getElementById('sbList').innerHTML=f.map(t=>`
+  <div class="si${S.tid===t.id?' on':''}" onclick="go('${t.id}')">
+    <div class="si-flag">${t.f}</div>
+    <div class="si-inf"><div class="si-n">${t.n}</div><div class="si-m">#${t.r}·${t.c}·Gr.${t.g}</div></div>
+    <div class="si-r">#${t.r}</div>
+  </div>`).join('');
+}
+function filterSb(q){renderSb(q)}
+
+// ─── MAIN ─────────────────────────────────────────────────────────────────────
+function renderMain(){
+  const el=document.getElementById('main');
+  if(!S.tid)      el.innerHTML=renderHome();
+  else if(!S.rid) el.innerHTML=renderTeam();
+  else            el.innerHTML=renderMatch();
+}
+
+function renderHome(){
+  const cs=['ALL','UEFA','CONMEBOL','CONCACAF','CAF','AFC','OFC'];
+  const f=T.filter(t=>t.n&&(S.conf==='ALL'||t.c===S.conf));
+  return `<div class="htitle">Copa del Mundo 2026</div>
+  <div class="hsub">Probabilidades reales sin margen de casa. Tú comparas con Bet365.</div>
+  <div class="cfbar">${cs.map(c=>`<div class="cf${S.conf===c?' on':''}" onclick="setConf('${c}')">${c}</div>`).join('')}</div>
+  <div class="tgrid">${f.map(t=>`<div class="tc" onclick="go('${t.id}')">
+    <div class="tc-f">${t.f}</div><div class="tc-n">${t.n}</div>
+    <div class="tc-m">#${t.r}·Gr.${t.g}</div></div>`).join('')}</div>`;
+}
+
+function renderTeam(){
+  const t=byId(S.tid);
+  const injH=t.inj&&t.inj.length?`<div class="inj">⚠️ ${t.inj.join(' · ')}</div>`:'';
+  const sqH=t.squad&&t.squad.length?`<hr class="d"><div class="sl">Convocatoria oficial FIFA 2026</div><div class="swrap">${t.squad.map(p=>`<span class="schip">${p}</span>`).join('')}</div>`:'';
+  const formSrc=t.vForm?'<span class="mtag mform">forma verificada</span>':'<span class="mtag mai">forma estimada</span>';
+  return `<button class="back" onclick="goHome()">← Volver</button>
+  <div class="thdr"><div class="th-f">${t.f}</div><div class="th-b">
+    <div class="th-n">${t.n}</div>
+    <div class="th-m">FIFA #${t.r} · ${t.c} · Grupo ${t.g} · <span class="mtag melo">ELO ${t.elo}</span></div>
+    <div class="frow">${t.form.map(fb).join('')}<span style="margin-left:6px">${formSrc}</span></div>
+    <div style="margin-top:6px;font-size:10px;color:var(--t2)">
+      Puntos de forma (últimos 8): <strong>${t.formPts}/24</strong> &nbsp;·&nbsp;
+      Penalización lesiones: <strong>${t.injPenalty>0?'-'+(t.injPenalty*100).toFixed(0)+'%':'ninguna'}</strong>
+    </div>
+    ${injH}
+  </div></div>
+  ${sqH}
+  <hr class="d"><div class="sl" style="margin-bottom:10px">Elige rival</div>
+  <div class="rgrid">${T.filter(x=>x.id!==t.id&&x.n).map(r=>`
+    <div class="rc${S.rid===r.id?' on':''}" onclick="setRiv('${r.id}')">
+      <div class="rc-f">${r.f}</div><div class="rc-n">${r.n}</div><div class="rc-r">#${r.r}</div>
+    </div>`).join('')}</div>`;
+}
+
+function renderMatch(){
+  const a=byId(S.tid),b=byId(S.rid);
+  const s=calcReal(a,b);
+  const TABS=[
+    {id:'resultado',label:'Resultado'},
+    {id:'goles',    label:'Goles'},
+    {id:'corners',  label:'Córners'},
+    {id:'tarjetas', label:'Tarjetas'},
+    {id:'remates',  label:'Remates'},
+    {id:'jugadores',label:'Jugadores'},
+    {id:'porteros', label:'Porteros'},
+    {id:'modelo',   label:'Cómo se calcula'},
+  ];
+  return `<button class="back" onclick="setRiv(null)">← Cambiar rival</button>
+  <div class="mbar">
+    <div class="mb-t"><div class="mb-fl">${a.f}</div><div class="mb-tn">${a.n}</div><div class="mb-rk">ELO ${a.elo} · forma ${a.formPts}/24</div></div>
+    <div class="mb-vs">VS</div>
+    <div class="mb-t"><div class="mb-fl">${b.f}</div><div class="mb-tn">${b.n}</div><div class="mb-rk">ELO ${b.elo} · forma ${b.formPts}/24</div></div>
+    <div style="margin-left:auto;text-align:right">
+      <div style="font-size:9px;color:var(--t3)">Confianza del modelo</div>
+      <div style="margin-top:3px">${confPill(s.modelConf)}</div>
+      <div style="font-size:9px;color:var(--t3);margin-top:4px">xG: ${s.lambdaA} – ${s.lambdaB}</div>
+    </div>
+  </div>
+  <div class="tabs">${TABS.map(t=>`<div class="tab${S.tab===t.id?' on':''}" onclick="setTab('${t.id}')">${t.label}</div>`).join('')}</div>
+  ${renderPanel(s,a,b)}`;
+}
+
+function renderPanel(s,a,b){
+  if(S.tab==='resultado') return pRes(s,a,b);
+  if(S.tab==='goles')     return pGoles(s,a,b);
+  if(S.tab==='corners')   return pCorners(s,a,b);
+  if(S.tab==='tarjetas')  return pTarjetas(s,a,b);
+  if(S.tab==='remates')   return pRemates(s,a,b);
+  if(S.tab==='jugadores') return pJug(a,b,s);
+  if(S.tab==='porteros')  return pPort(s,a,b);
+  if(S.tab==='modelo')    return pModelo(s,a,b);
+  return '';
+}
+
+function pRes(s,a,b){
+  const wPct=(s.pW*100).toFixed(1);
+  const dPct=(s.pD*100).toFixed(1);
+  const lPct=(s.pL*100).toFixed(1);
+  return `
+  <div class="ib"><strong>Estas son las probabilidades reales sin margen.</strong> La cuota justa es 1/probabilidad. Si Bet365 ofrece una cuota inferior a la cuota justa → ellos tienen ventaja. Si es superior → tú tienes ventaja. Modelo: ELO + forma reciente + lesiones.</div>
+  <div class="prob3">
+    <div class="pcard">
+      <div class="pcard-label">Victoria ${a.n}</div>
+      <div class="pcard-big pW">${wPct}%</div>
+      <div class="pcard-conf">Cuota justa: <strong>${fairOdds(s.pW)}</strong></div>
+    </div>
+    <div class="pcard">
+      <div class="pcard-label">Empate</div>
+      <div class="pcard-big pD">${dPct}%</div>
+      <div class="pcard-conf">Cuota justa: <strong>${fairOdds(s.pD)}</strong></div>
+    </div>
+    <div class="pcard">
+      <div class="pcard-label">Victoria ${b.n}</div>
+      <div class="pcard-big pL">${lPct}%</div>
+      <div class="pcard-conf">Cuota justa: <strong>${fairOdds(s.pL)}</strong></div>
+    </div>
+  </div>
+  <div class="conf-section">
+    <div class="sl" style="margin-bottom:10px">Factores que componen la probabilidad</div>
+    <div class="conf-row">
+      <div class="conf-label">Ventaja ELO bruta</div>
+      <div class="conf-track"><div class="conf-fill" style="width:${Math.round(s.pWin_elo*100)}%;background:var(--acc)"></div></div>
+      <div class="conf-val">${(s.pWin_elo*100).toFixed(1)}%</div>
+    </div>
+    <div class="conf-row">
+      <div class="conf-label">Ajuste por forma</div>
+      <div class="conf-track"><div class="conf-fill" style="width:${Math.min(100,Math.abs(s.formAdj)*400+50)}%;background:${s.formAdj>=0?'var(--g)':'var(--r)'}"></div></div>
+      <div class="conf-val" style="color:${s.formAdj>=0?'var(--g)':'var(--r)'}">${s.formAdj>=0?'+':''}${(s.formAdj*100).toFixed(1)}%</div>
+    </div>
+    <div class="conf-row">
+      <div class="conf-label">Ajuste lesiones</div>
+      <div class="conf-track"><div class="conf-fill" style="width:${Math.min(100,Math.abs(s.injAdj)*400+50)}%;background:${s.injAdj<=0?'var(--r)':'var(--g)'}"></div></div>
+      <div class="conf-val" style="color:${s.injAdj<=0?'var(--r)':'var(--g)'}">${(s.injAdj*100).toFixed(1)}%</div>
+    </div>
+  </div>
+  <div class="sl">Doble oportunidad — probabilidades reales</div>
+  <table class="mktt">
+    <thead><tr><th>Mercado</th><th>Prob. real</th><th>Cuota justa</th><th>Confianza</th></tr></thead>
+    <tbody>
+      <tr><td>1X (${a.n} no pierde)</td><td class="pct-cell pW">${pct(s.pW+s.pD)}</td><td>${fairOdds(s.pW+s.pD)}</td><td>${confPill(s.modelConf)}</td></tr>
+      <tr><td>X2 (${b.n} no pierde)</td><td class="pct-cell pL">${pct(s.pD+s.pL)}</td><td>${fairOdds(s.pD+s.pL)}</td><td>${confPill(s.modelConf)}</td></tr>
+      <tr><td>12 (alguien gana, sin empate)</td><td class="pct-cell">${pct(s.pW+s.pL)}</td><td>${fairOdds(s.pW+s.pL)}</td><td>${confPill(s.modelConf)}</td></tr>
+    </tbody>
+  </table>`;
+}
+
+function pGoles(s,a,b){
+  const rows=[
+    [0.5, s.o05],
+    [1.5, s.o15],
+    [2.5, s.o25],
+    [3.5, s.o35],
+    [4.5, s.o45],
+  ];
+  // Confianza por línea: Over 0.5 en partidos muy desequilibrados = alta confianza
+  // Over 4.5 = baja confianza siempre
+  function lineConf(line, prob){
+    if(prob>0.94||prob<0.06) return 'alta';
+    if(prob>0.80||prob<0.20) return 'alta';
+    if(prob>0.60||prob<0.40) return 'media';
+    return 'baja';
+  }
+  return `
+  <div class="ib"><strong>xG calculado desde la probabilidad real del partido.</strong> λ_A=${s.lambdaA} (${a.n}) · λ_B=${s.lambdaB} (${b.n}). Over/Under calculados vía distribución Poisson. La cuota justa es 1/probabilidad — sin margen de casa.</div>
+  <div class="factor-grid">
+    <div class="fc"><div class="fc-label">xG ${a.n}</div><div class="fc-val pW">${s.lambdaA}</div><div class="fc-sub">Goles esperados</div></div>
+    <div class="fc"><div class="fc-label">xG ${b.n}</div><div class="fc-val pL">${s.lambdaB}</div><div class="fc-sub">Goles esperados</div></div>
+    <div class="fc"><div class="fc-label">xG total</div><div class="fc-val pD">${s.xgT}</div><div class="fc-sub">Ambos equipos</div></div>
+    <div class="fc"><div class="fc-label">BTTS real</div><div class="fc-val">${pct(s.btts)}</div><div class="fc-sub">Ambos marcan</div></div>
+  </div>
+  <table class="mktt">
+    <thead><tr><th>Mercado</th><th>Prob. real Over</th><th>Cuota justa Over</th><th>Prob. real Under</th><th>Cuota justa Under</th><th>Confianza</th></tr></thead>
+    <tbody>${rows.map(([line,p])=>{
+      const conf=lineConf(line,p);
+      const overDisp=p>0.97?'~99%':p<0.03?'~1%':pct(p);
+      const underDisp=(1-p)>0.97?'~99%':(1-p)<0.03?'~1%':pct(1-p);
+      const overOdds=p>0.999?'no ofrecido':fairOdds(p);
+      const underOdds=(1-p)>0.999?'no ofrecido':fairOdds(1-p);
+      return`<tr>
+        <td>Over / Under ${line}</td>
+        <td class="pct-cell ${p>0.6?'pW':p<0.4?'pL':''}">${overDisp}</td>
+        <td>${overOdds}</td>
+        <td class="pct-cell ${(1-p)>0.6?'pW':(1-p)<0.4?'pL':''}">${underDisp}</td>
+        <td>${underOdds}</td>
+        <td>${confPill(conf)}</td>
+      </tr>`;}).join('')}
+    </tbody>
+  </table>`;
+}
+
+function pCorners(s,a,b){
+  function pCorn(line){
+    const lam=s.cornT*0.9;
+    let p=0;for(let k=0;k<=30;k++){if(k>line){let pp=Math.exp(-lam);for(let i=1;i<=k;i++)pp*=lam/i;p+=pp;}}
+    return Math.min(0.97,Math.max(0.03,p));
+  }
+  const lines=[7.5,8.5,9.5,10.5,11.5];
+  return `
+  <div class="ib">Córners calculados desde estadísticas base de cada equipo en los últimos 10 partidos (excluyendo goleadas vs rivales ranking 70+), ajustados por estilo del rival. Cuota justa = 1/probabilidad real.</div>
+  <div class="factor-grid">
+    <div class="fc"><div class="fc-label">Córners ${a.n}</div><div class="fc-val pW">${s.cornA}</div></div>
+    <div class="fc"><div class="fc-label">Córners ${b.n}</div><div class="fc-val pL">${s.cornB}</div></div>
+    <div class="fc"><div class="fc-label">Total partido</div><div class="fc-val pD">${s.cornT}</div></div>
+  </div>
+  <table class="mktt">
+    <thead><tr><th>Línea</th><th>Prob. real Over</th><th>Cuota justa</th><th>Prob. real Under</th><th>Cuota justa</th></tr></thead>
+    <tbody>${lines.map(l=>{const p=pCorn(l);return`<tr>
+      <td>${l} córners</td>
+      <td class="pct-cell ${p>0.6?'pW':p<0.4?'pL':''}">${pct(p)}</td>
+      <td>${fairOdds(p)}</td>
+      <td class="pct-cell ${(1-p)>0.6?'pW':(1-p)<0.4?'pL':''}">${pct(1-p)}</td>
+      <td>${fairOdds(1-p)}</td>
+    </tr>`}).join('')}</tbody>
+  </table>`;
+}
+
+function pTarjetas(s,a,b){
+  const lines=[1.5,2.5,3.5,4.5,5.5];
+  function pY(line){return Math.min(0.97,Math.max(0.03,1/(1+Math.exp(-(s.yellT-line)*0.85))))}
+  return `
+  <div class="ib">Las tarjetas aumentan en partidos equilibrados (mayor presión táctica). El modelo penaliza o premia según el estilo del rival. Cuota justa = 1/probabilidad real.</div>
+  <div class="factor-grid">
+    <div class="fc"><div class="fc-label">Amarillas ${a.n}</div><div class="fc-val pW">${a.yellBase.toFixed(1)}</div><div class="fc-sub">Media base</div></div>
+    <div class="fc"><div class="fc-label">Amarillas ${b.n}</div><div class="fc-val pL">${b.yellBase.toFixed(1)}</div><div class="fc-sub">Media base</div></div>
+    <div class="fc"><div class="fc-label">Total ajustado</div><div class="fc-val pD">${s.yellT.toFixed(1)}</div><div class="fc-sub">Partido completo</div></div>
+    <div class="fc"><div class="fc-label">Prob. al menos 1 roja</div><div class="fc-val">${pct(Math.min(0.28,s.yellT*0.042))}</div></div>
+  </div>
+  <table class="mktt">
+    <thead><tr><th>Línea amarillas</th><th>Prob. real Over</th><th>Cuota justa</th><th>Prob. real Under</th><th>Cuota justa</th></tr></thead>
+    <tbody>${lines.map(l=>{const p=pY(l);return`<tr>
+      <td>${l} amarillas</td>
+      <td class="pct-cell ${p>0.6?'pW':p<0.4?'pL':''}">${pct(p)}</td>
+      <td>${fairOdds(p)}</td>
+      <td class="pct-cell ${(1-p)>0.6?'pW':(1-p)<0.4?'pL':''}">${pct(1-p)}</td>
+      <td>${fairOdds(1-p)}</td>
+    </tr>`}).join('')}</tbody>
+  </table>`;
+}
+
+function pRemates(s,a,b){
+  const lines=[6.5,8.5,10.5,12.5,14.5];
+  function pS(line){const raw=s.shotsA-line;return Math.min(0.97,Math.max(0.03,1/(1+Math.exp(-raw*0.32))))}
+  return `
+  <div class="ib">Remates ajustados por estilo del rival (${b.sty}). Cuota justa = 1/probabilidad real.</div>
+  <div class="factor-grid">
+    <div class="fc"><div class="fc-label">Remates ${a.n}</div><div class="fc-val pW">${s.shotsA}</div></div>
+    <div class="fc"><div class="fc-label">A puerta</div><div class="fc-val">${s.shotsOTA}</div></div>
+    <div class="fc"><div class="fc-label">Precisión</div><div class="fc-val">${Math.round(s.shotsOTA/s.shotsA*100)}%</div></div>
+    <div class="fc"><div class="fc-label">Posesión ${a.n}</div><div class="fc-val">${a.poss}%</div></div>
+  </div>
+  <table class="mktt">
+    <thead><tr><th>Línea remates ${a.n}</th><th>Prob. real Over</th><th>Cuota justa</th><th>Prob. real Under</th><th>Cuota justa</th></tr></thead>
+    <tbody>${lines.map(l=>{const p=pS(l);return`<tr>
+      <td>${l} remates</td>
+      <td class="pct-cell ${p>0.6?'pW':p<0.4?'pL':''}">${pct(p)}</td>
+      <td>${fairOdds(p)}</td>
+      <td class="pct-cell ${(1-p)>0.6?'pW':(1-p)<0.4?'pL':''}">${pct(1-p)}</td>
+      <td>${fairOdds(1-p)}</td>
+    </tr>`}).join('')}</tbody>
+  </table>`;
+}
+
+function pJug(a,b,s){
+  const srcA=a.squad&&a.squad.length?'(convocatoria verificada)':'(estimado)';
+  return `
+  <div class="sl">${a.f} ${a.n} ${srcA}</div>
+  <table class="ptab">
+    <thead><tr><th>Rol</th><th>Jugador</th><th>Mercado</th><th>Contexto vs ${b.n}</th></tr></thead>
+    <tbody>
+      <tr><td>Máx. goleador</td><td><strong>${a.topG}</strong></td><td><span class="badge bg2">1er goleador</span></td><td>${b.sty==='defensivo'?'Rival defensivo: necesitará más intentos':'Normal'}</td></tr>
+      <tr><td>Más tarjetas</td><td><strong>${a.topF}</strong></td><td><span class="badge ba2">Tarjeta</span></td><td>${b.sty==='fisico'?'⚠️ Rival físico: riesgo elevado':'Normal'}</td></tr>
+      <tr><td>Mejor pasador</td><td><strong>${a.topP}</strong></td><td><span class="badge bb2">Asistencia</span></td><td>Normal</td></tr>
+    </tbody>
+  </table>
+  ${a.squad&&a.squad.length?`<div style="margin-top:6px;font-size:9px;color:var(--t3)">Convocatoria oficial FIFA 2026: ${a.squad.length} jugadores verificados</div>`:''}
+  <hr class="d">
+  <div class="sl">${b.f} ${b.n}</div>
+  <table class="ptab">
+    <thead><tr><th>Rol</th><th>Jugador</th><th>Mercado</th></tr></thead>
+    <tbody>
+      <tr><td>Máx. goleador</td><td><strong>${b.topG}</strong></td><td><span class="badge bg2">1er goleador</span></td></tr>
+      <tr><td>Más tarjetas</td><td><strong>${b.topF}</strong></td><td><span class="badge ba2">Tarjeta</span></td></tr>
+    </tbody>
+  </table>`;
+}
+
+function pPort(s,a,b){
+  const lines=[1.5,2.5,3.5,4.5,5.5];
+  function pSv(line){return Math.min(0.97,Math.max(0.03,1/(1+Math.exp(-(s.savesA-line)*0.65))))}
+  return `
+  <div class="factor-grid">
+    <div class="fc"><div class="fc-label">Portero ${a.n}</div><div class="fc-val" style="font-size:12px">${a.topGK}</div></div>
+    <div class="fc"><div class="fc-label">Paradas estimadas</div><div class="fc-val pW">${s.savesA}</div></div>
+    <div class="fc"><div class="fc-label">P(portería a 0) ${a.n}</div><div class="fc-val">${pct(s.cs_a)}</div><div class="fc-sub">Cuota justa: ${fairOdds(s.cs_a)}</div></div>
+    <div class="fc"><div class="fc-label">P(portería a 0) ${b.n}</div><div class="fc-val">${pct(s.cs_b)}</div><div class="fc-sub">Cuota justa: ${fairOdds(s.cs_b)}</div></div>
+  </div>
+  <table class="mktt">
+    <thead><tr><th>Línea paradas ${a.n}</th><th>Prob. real Over</th><th>Cuota justa</th><th>Prob. real Under</th><th>Cuota justa</th></tr></thead>
+    <tbody>${lines.map(l=>{const p=pSv(l);return`<tr>
+      <td>${l} paradas</td>
+      <td class="pct-cell ${p>0.6?'pW':p<0.4?'pL':''}">${pct(p)}</td>
+      <td>${fairOdds(p)}</td>
+      <td class="pct-cell ${(1-p)>0.6?'pW':(1-p)<0.4?'pL':''}">${pct(1-p)}</td>
+      <td>${fairOdds(1-p)}</td>
+    </tr>`}).join('')}</tbody>
+  </table>`;
+}
+
+function pModelo(s,a,b){
+  return `
+  <div class="fbox">
+    <strong>Cómo se calculan las probabilidades reales</strong><br><br>
+    <strong style="color:var(--tl)">Capa 1 — ELO (base matemática sin favoritismos)</strong><br>
+    ELO ${a.n}: <code>${a.elo}</code> &nbsp;·&nbsp; ELO ${b.n}: <code>${b.elo}</code><br>
+    ΔElo = <code>${a.elo - b.elo}</code><br>
+    Fórmula: <code>P(win_elo) = 1 / (10^(-${a.elo-b.elo}/400) + 1) = ${(s.pWin_elo*100).toFixed(2)}%</code><br><br>
+    <strong style="color:var(--tl)">Capa 2 — Forma reciente (últimos 8 partidos)</strong><br>
+    Puntos de forma ${a.n}: <code>${a.formPts}/24</code> (${(a.formPts/24*100).toFixed(0)}% del máximo)<br>
+    Puntos de forma ${b.n}: <code>${b.formPts}/24</code> (${(b.formPts/24*100).toFixed(0)}% del máximo)<br>
+    Ajuste aplicado: <code>${s.formAdj>=0?'+':''}${(s.formAdj*100).toFixed(2)}%</code><br><br>
+    <strong style="color:var(--tl)">Capa 3 — Contexto (lesiones/convocatoria)</strong><br>
+    Penalización lesiones ${a.n}: <code>-${(a.injPenalty*100).toFixed(0)}%</code>${a.inj&&a.inj.length?' ('+a.inj.join(', ')+')':' (ninguna)'}<br>
+    Penalización lesiones ${b.n}: <code>-${(b.injPenalty*100).toFixed(0)}%</code>${b.inj&&b.inj.length?' ('+b.inj.join(', ')+')':' (ninguna)'}<br>
+    Ajuste neto: <code>${s.injAdj>=0?'+':''}${(s.injAdj*100).toFixed(2)}%</code><br><br>
+    <strong style="color:var(--tl)">Resultado final</strong><br>
+    Victoria ${a.n}: <code>${(s.pW*100).toFixed(2)}%</code> → Cuota justa: <code>${fairOdds(s.pW)}</code><br>
+    Empate: <code>${(s.pD*100).toFixed(2)}%</code> → Cuota justa: <code>${fairOdds(s.pD)}</code><br>
+    Victoria ${b.n}: <code>${(s.pL*100).toFixed(2)}%</code> → Cuota justa: <code>${fairOdds(s.pL)}</code><br><br>
+    <strong style="color:var(--a)">Confianza del modelo: ${s.modelConf}</strong><br>
+    ${s.modelConf==='alta'?'Diferencia de nivel grande (>300 puntos ELO) → predicción más fiable':
+      s.modelConf==='media'?'Diferencia de nivel moderada (150-300 ELO) → predicción razonable':
+      'Equipos muy igualados (<150 ELO) → alta incertidumbre, empate muy probable'}
+  </div>
+  <div class="ib">
+    <strong>Por qué las cuotas de Bet365 son distintas:</strong><br>
+    Bet365 coge nuestra probabilidad real y añade su margen (típicamente 5-8%). Ejemplo:<br>
+    Si la probabilidad real es ${(s.pW*100).toFixed(1)}%, Bet365 la convierte en ~${((s.pW*1.06)*100).toFixed(1)}% (inflada).<br>
+    Eso hace que la cuota baje de ${fairOdds(s.pW)} a ~${(1/(s.pW*1.06)).toFixed(2)}.<br>
+    Ese margen es su beneficio. Si la cuota de Bet365 es mayor que ${fairOdds(s.pW)} → hay valor para ti.
+  </div>`;
+}
+
+// ─── ACCIONES ─────────────────────────────────────────────────────────────────
+function go(id){S.tid=id;S.rid=null;S.tab='resultado';renderSb();renderMain()}
+function goHome(){S.tid=null;S.rid=null;renderSb();renderMain()}
+function setRiv(id){S.rid=id;S.tab='resultado';renderMain()}
+function setTab(t){S.tab=t;renderMain()}
+function setConf(c){S.conf=c;renderMain()}
+
+renderSb();renderMain();
+</script>
+</body>
+</html>
